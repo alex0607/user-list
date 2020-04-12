@@ -24,7 +24,6 @@ const Main = styled.div`
 
 class AppRouter extends PureComponent {
   render() {
-    console.log( this.props );
     return (
       <Main>
           <Router>

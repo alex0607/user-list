@@ -22,6 +22,7 @@ const CardStyle = styled.div`
   height: 200px;
   margin: 15px 0;
   width: 600px;
+  cursor: 'pointer';
 `;
 
 const CardContent = styled.div`
@@ -92,6 +93,7 @@ class UsersList extends PureComponent {
         <Link
             key={uuid}
             to={`/user/${uuid}`}
+            style={{ textDecoration: 'none' }}
         >
           <CardStyle>
             <Card>
@@ -116,7 +118,6 @@ class UsersList extends PureComponent {
         </Loader>
       );
     }
-    console.log( usersList );
     const filteredUsers = usersList.filter( user => (
       user.name.first.startsWith(filter) ||
       user.name.last.startsWith(filter)
