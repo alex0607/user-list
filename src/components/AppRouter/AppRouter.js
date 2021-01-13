@@ -3,9 +3,9 @@ import React from 'react';
 import { Container } from '@material-ui/core';
 //Components
 import {
-  Header,
-  UserDetails,
-  Users
+    Header,
+    UserDetails,
+    Users
 } from '../';
 import {
     BrowserRouter as Router,

@@ -1,18 +1,11 @@
 //Modules
-import React, { PureComponent } from 'react';
+import React from 'react';
 //Components
 import { AppRouter } from './components'
 
 
-class App extends PureComponent {
-  static propTypes = {
-  };
-
-  render() {
-    return (
-      <AppRouter />
-    );
-  }
-}
+const App = () => (
+    <AppRouter />
+);
 
 export default App;
