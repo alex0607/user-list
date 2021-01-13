@@ -12,9 +12,12 @@ export const changeFilterValue = value => dispatch => {
   })
 };
 
-export const getUsers = () => dispatch => {
-  return axios
-    .get('https://randomuser.me/api?results=100')
+export const getUsers = dispatch => {
+  axios.get('https://randomuser.me/api?results=100', {
+      headers: {
+        'Access-Control-Allow-Origin': 'origin-list',
+      }
+  })
     .then(res => {
       dispatch({
         type: GET_USERS_SUCCESS,
@@ -26,6 +29,5 @@ export const getUsers = () => dispatch => {
         type: GET_USERS_ERROR,
         message: err.message
       });
-      return null;
     });
 };

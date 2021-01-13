@@ -1,11 +1,11 @@
 //Modules
-import React, { PureComponent } from 'react';
-import styled from 'styled-components';
+import React from 'react';
+import { Container } from '@material-ui/core';
 //Components
 import {
   Header,
   UserDetails,
-  UsersList
+  Users
 } from '../';
 import {
     BrowserRouter as Router,
@@ -14,28 +14,16 @@ import {
 } from 'react-router-dom';
 
 
-const Main = styled.div`
-  min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-class AppRouter extends PureComponent {
-  render() {
-    return (
-      <Main>
-          <Router>
-              <Header />
-              <Switch>
-                  <Route exact path={'/'} component={UsersList} />
-                  <Route exact path={'/user/:id'} component={UserDetails} />
-              </Switch>
-          </Router>
-      </Main>
-    );
-  }
-}
+const AppRouter = () => (
+    <Container>
+        <Router>
+            <Header />
+            <Switch>
+                <Route exact path={'/'} component={Users} />
+                <Route exact path={'/user/:id'} component={UserDetails} />
+            </Switch>
+        </Router>
+    </Container>
+);
 
 export default AppRouter;

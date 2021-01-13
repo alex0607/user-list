@@ -1,37 +1,37 @@
 //Modules
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import React  from 'react';
+import { useSelector } from 'react-redux';
 // Components
 import {
   Link
 } from 'react-router-dom';
-import { AppBar } from '@material-ui/core';
+import { AppBar, makeStyles } from '@material-ui/core';
 
-
-class Header extends PureComponent {
-  render() {
-    const { showBackArrow } = this.props;
-    return (
-      <AppBar style={{
+const useStyles = makeStyles({
+    MuiAppBarRoot: {
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'row',
         height: '30px',
-        paddingLeft: '15px'
-      }} >
-        {showBackArrow &&
-        <Link to={'/'}>
-          <button>{'←'}</button>
-        </Link>}
-      </AppBar>
+        paddingLeft: '15px',
+    },
+});
+
+
+const Header = () => {
+    const showBackArrow = useSelector(state => state.ui.showBackArrow);
+    const classes = useStyles();
+
+    return (
+        <AppBar classes={{ root: classes.MuiAppBarRoot }}>
+            {
+                showBackArrow &&
+                <Link to={'/'}>
+                    <button>Back</button>
+                </Link>
+            }
+        </AppBar>
     );
-  }
 }
 
-const mapStateToProps = state => {
-  return {
-    showBackArrow: state.ui.showBackArrow
-  };
-};
-
-export default connect(mapStateToProps, null)(Header);
+export default Header;

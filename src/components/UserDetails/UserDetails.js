@@ -1,103 +1,130 @@
 // Modules
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import moment from 'moment';
 // Components
-import { Avatar } from '@material-ui/core';
+import {
+    Avatar,
+    Box,
+    Container,
+    withStyles
+} from '@material-ui/core';
 // Actions
 import { toggleBackArrow } from '../../store/actions/ui';
 
 
-const AvatarStyle = styled.div`
-  display: flex;
-  align-items: center;
-`;
+const styles = theme => ({
+    MuiAvatarRoot: {
+        height: 200,
+        width: 200,
+        margin: 'auto',
+        [theme.breakpoints.down('xs')]: {
+            height: 100,
+            width: 100,
+        },
+    },
+    MuiBoxRoot: {
+        marginLeft: 15,
+        [theme.breakpoints.down('xs')]: {
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            marginLeft: 0,
+        },
+    },
+    MuiContainerRoot: {
+        margin: '50px auto 0',
+        width: 550,
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        [theme.breakpoints.down('xs')]: {
+            margin: 'auto 10px',
+            width: '100%',
+            flexDirection: 'column',
+            marginTop: '50px'
+        },
+    },
+});
 
-const UserDetailsStyle = styled.div`
-  margin: 50px auto 0;
-  width: 600px;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-`;
+const UserDetails = props => {
+    const dispatch = useDispatch();
+    const showBackArrow = useSelector(state => state.ui.showBackArrow);
+    const history = useHistory();
 
-class UserDetails extends PureComponent {
-  componentDidMount() {
+    useEffect(() => {
+        const {
+            match: {
+                params: {
+                    id
+                } = {}
+            } = {}
+        } = props;
+
+        if( !showBackArrow && id ) {
+            toggleBackArrow(dispatch);
+        }
+    })
+
     const {
-      match: {
-        params: {
-          id
-        } = {}
-      } = {},
-      showBackArrow,
-      toggleBackArrow
-    } = this.props;
+        match: {
+            params: {
+                id
+            } = {}
+        } = {},
+        classes,
+    } = props;
+    const usersList = useSelector(state => state.users.usersList);
+    const currentUser = usersList.find( user => {
+    return user.login.uuid === id
+    }) || {};
 
-    if( !showBackArrow && id ) {
-      toggleBackArrow();
-    }
-  }
+    useEffect(() => {
+        if(!Object.keys(currentUser).length) {
+            history.push('/');
+        }
+    })
 
-  render() {
-  const {
-    usersList,
-    match: {
-      params: {
-        id
-      } = {}
-    } = {}
-  } = this.props;
-  const currentUser = usersList.find( user => {
-     return user.login.uuid === id
-  }) || {};
-  const {
-    dob: { date } = {},
-    email,
-    gender,
-    location: { country, street: { name, number } = {}, city, state } = {},
-    name: { first, last } = {},
-    phone,
-    picture: { large } = {},
-  } = currentUser;
+    const {
+        dob: { date } = {},
+        email,
+        gender,
+        location: { country, street: { name, number } = {}, city, state } = {},
+        name: { first, last } = {},
+        phone,
+        picture: { large } = {},
+    } = currentUser;
 
-  return (
-    <UserDetailsStyle>
-      <AvatarStyle>
-        <Avatar
-          style={{
-            width: '200px',
-            height: '200px'
-          }}
-          src={large}
-          alt={`${first} ${last}`}
-        />
-      </AvatarStyle>
-    <div>
-      <h4>{first} {last}</h4>
-      <p>Date of birth:{date}</p>
-      <p>Gender:{gender}</p>
-      <h4>Location:</h4>
-      <p>Street: {name} {number}</p>
-      <p>City: {city}</p>
-      <p>State: {state}</p>
-      <p>Country: {country}</p>
-      <p>{email}</p>
-      <p>{phone}</p>
-    </div>
-    </UserDetailsStyle>
-  )
-  }
+    const newDateFormat = moment(date).format('DD.MMM.YYYY');
+
+    return (
+        <Container classes={{ root: classes.MuiContainerRoot }}>
+            <Avatar
+                classes={{
+                  root: classes.MuiAvatarRoot
+                }}
+                src={large}
+                alt={`${first} ${last}`}
+            />
+            <Box
+                classes={{
+                  root: classes.MuiBoxRoot
+                }}
+            >
+                <h4>{first} {last}</h4>
+                <div>Date of birth: {newDateFormat}</div>
+                <div>Gender: {gender}</div>
+                <h4>Location:</h4>
+                <div>Street: {name} {number}</div>
+                <div>City: {city}</div>
+                <div>State: {state}</div>
+                <div>Country: {country}</div>
+                <div>Email: {email}</div>
+                <div>Phone: {phone}</div>
+            </Box>
+        </Container>
+    );
 }
 
-const mapStateToProps = state => {
-  return {
-    showBackArrow: state.ui.showBackArrow,
-    usersList: state.users.usersList
-  };
-};
-
-const mapDispatchToProps = {
-  toggleBackArrow
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserDetails);
+export default withStyles(styles)(UserDetails);
